@@ -3,6 +3,7 @@
     'use strict';
 
     var CACHE_KEY = 'arn0.apps.v1';
+    var MAX_PINNED = 4;    // apps beside the inputs in the top row; more would not fit on screen
     var REFRESH_AFTER_MS = 5 * 60 * 1000;
     var GRID_COLS = 5;
 
@@ -158,6 +159,7 @@
         Prefs.get().home = items.map(function (i) {
             var entry = { id: i.id, label: i.label };
             if (i.brand) entry.brand = i.brand.key;
+            if (i.pinned) entry.pinned = true;
             return entry;
         });
         Prefs.save();
@@ -169,7 +171,11 @@
         row.innerHTML = '';
         var items = homeItems();
         if (!items.length) items = Apps.allSorted(state.apps, false).slice(0, 8);
-        items.forEach(function (item) { row.appendChild(appTile(item)); });
+        // Top row: inputs, then up to MAX_PINNED apps pinned from Settings → Apps on Home.
+        var pinned = items.filter(function (item) { return item.pinned; }).slice(0, MAX_PINNED);
+        items.forEach(function (item) {
+            if (pinned.indexOf(item) < 0) row.appendChild(appTile(item));
+        });
         row.appendChild(allAppsTile());
 
         var row2 = $('inputs-row');
@@ -177,6 +183,7 @@
         inputs().forEach(function (input) {
             if (!input.hidden) row2.appendChild(inputTile(input));
         });
+        pinned.forEach(function (item) { row2.appendChild(appTile(item)); });
         $('inputs-section').classList.toggle('hidden', !row2.children.length);
         applyInputStatus();
         if (UI.isVisible('home')) UI.refresh();
@@ -184,7 +191,7 @@
 
     function applyInputStatus() {
         UI.children($('inputs-row')).forEach(function (tile) {
-            tile._dot.classList.toggle('on', state.hdmi[tile._item.hdmi] === true);
+            if (tile._dot) tile._dot.classList.toggle('on', state.hdmi[tile._item.hdmi] === true);
         });
     }
 
@@ -410,7 +417,7 @@
             startRow: 1,
             hints: [['OK', 'Open'], ['▲', 'Settings']],
             rows: function () {
-                return [[$('gear')], UI.children($('apps-row')), UI.children($('inputs-row'))];
+                return [[$('gear')], UI.children($('inputs-row')), UI.children($('apps-row'))];
             },
             activate: function (item) {
                 if (item.kind === 'app') launchApp(item);
@@ -483,6 +490,7 @@
 
     window.Home = {
         init: init,
+        MAX_PINNED: MAX_PINNED,
         apps: function () { return state.apps; },
         homeItems: homeItems,
         setHomeItems: setHomeItems,

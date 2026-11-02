@@ -7,9 +7,11 @@
  *   { match: 'netflix' }              case-insensitive regex on id or name
  *   label                             optional display name
  *   brand                             optional key from js/brands.js (otherwise guessed from the name)
+ *   pinned: true                      show it in the top row, after the inputs, up to 4 (also set from
+ *                                     Settings → Apps on Home → OK → Pin to top row)
  * Entries that match nothing are skipped.
  *
- * inputs: HDMI ports shown in the second row. Set `hdmi` to the port each device is plugged into.
+ * inputs: HDMI ports shown in the first row. Set `hdmi` to the port each device is plugged into.
  */
 window.LAUNCHER_CONFIG = {
     apps: [
@@ -24,9 +26,7 @@ window.LAUNCHER_CONFIG = {
     ],
 
     inputs: [
-        { hdmi: 1, label: 'Nintendo Switch 2', brand: 'switch' },
-        { hdmi: 2, label: 'PlayStation 5', brand: 'playstation' },
-        { hdmi: 4, label: 'Xbox Series X', brand: 'xbox' }
+        { hdmi: 1, label: 'PC', brand: 'pc' }
     ],
 
     // How an input tile switches the TV. See README "HDMI inputs".

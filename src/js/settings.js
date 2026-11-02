@@ -365,6 +365,7 @@
         row.appendChild(Home.miniTile(item));
         row.appendChild(el('span', 'ed-label', item.label));
         if (moving) row.appendChild(el('span', 'ed-move', '↕'));
+        else if (item.pinned) row.appendChild(el('span', 'ed-move', '📌'));
         return row;
     }
 
@@ -464,6 +465,20 @@
                 label: 'Move', run: function () {
                     ed.moving = i;
                     ed.snapshot = ed.items.slice();
+                    edRender();
+                    UI.refresh();
+                }
+            },
+            {
+                label: item.pinned ? 'Unpin from top row' : 'Pin to top row', run: function () {
+                    var count = ed.items.filter(function (x) { return x.pinned; }).length;
+                    if (!item.pinned && count >= Home.MAX_PINNED) {
+                        UI.toast('Up to ' + Home.MAX_PINNED + ' pinned apps: unpin one first');
+                        return;
+                    }
+                    // Closing the menu reloads ed.items, so look the entry up again.
+                    ed.items[i].pinned = !item.pinned;
+                    edSave();
                     edRender();
                     UI.refresh();
                 }

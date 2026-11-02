@@ -144,8 +144,9 @@ h1, h2 {
     right: 0;
 }
 
-#apps-section { top: 350px; }
-#inputs-section { top: 690px; }
+#inputs-section { top: 350px; }
+#apps-section { top: 690px; }
+#inputs-section.hidden ~ #apps-section { top: 350px; }
 
 .shelf h2 {
     margin-bottom: 26px;
@@ -272,15 +273,15 @@ h1, h2 {
 
 .input {
     flex: none;
-    width: 536px;
+    width: 300px;    /* app tile width, so one input and four pinned apps fit the row */
     margin-right: 36px;
 }
 
 .input .tile {
-    height: 190px;
+    height: 170px;
     display: flex;
     align-items: center;
-    padding: 0 40px;
+    padding: 0 32px;
 }
 
 .input .mark {
