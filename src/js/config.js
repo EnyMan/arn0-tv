@@ -43,6 +43,10 @@ window.LAUNCHER_CONFIG = {
         wallpaper: null
     },
 
+    // Your own photos, added after the bundled ones: the list.json address of the nas/wallpapers
+    // service, e.g. 'http://192.168.0.10:8090/list.json'. Belongs in config.local.js. null = off.
+    wallpaperFeed: null,
+
     /*
      * Weather shown in the screen saver's corner, from Open-Meteo. No API key and nothing to
      * keep secret, so this is the whole setup: put your own coordinates here (two decimals is

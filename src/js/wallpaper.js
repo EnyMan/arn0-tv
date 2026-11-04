@@ -13,7 +13,57 @@
 
     var token = 0;
 
-    function list() { return window.WALLPAPERS || []; }
+    /*
+     * Extra photos from LAUNCHER_CONFIG.wallpaperFeed (nas/wallpapers on the home network), shown
+     * after the bundled ones. The last list read is kept, so the photos keep working while the
+     * NAS is off; the files themselves still have to load from it.
+     */
+    var FEED_KEY = 'arn0.wallpaperFeed.v1';
+    var FEED_EVERY_MS = 10 * 60 * 1000;
+    var feed = [];
+    var feedAt = 0;
+    try {
+        feed = JSON.parse(localStorage.getItem(FEED_KEY)) || [];
+    } catch (e) {
+        feed = [];
+    }
+
+    function list() { return (window.WALLPAPERS || []).concat(feed); }
+
+    function refreshFeed() {
+        var url = window.LAUNCHER_CONFIG.wallpaperFeed;
+        if (!url || Date.now() - feedAt < FEED_EVERY_MS) return;
+        feedAt = Date.now();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.timeout = 8000;
+        xhr.onload = function () {
+            try {
+                if (xhr.status !== 200) throw new Error('HTTP ' + xhr.status);
+                var items = JSON.parse(xhr.responseText).wallpapers.map(function (w) {
+                    return {
+                        key: w.key,
+                        title: w.title,
+                        file: new URL(w.file, url).href,
+                        thumb: new URL(w.thumb, url).href,
+                        credit: ''
+                    };
+                });
+                if (JSON.stringify(items) === JSON.stringify(feed)) return;
+                feed = items;
+                try {
+                    localStorage.setItem(FEED_KEY, JSON.stringify(feed));
+                } catch (e) {
+                    // Storage full or unavailable: the list still works until the next start.
+                }
+                apply();
+            } catch (e) {
+                DevLog.log('Wallpaper feed unusable: ' + DevLog.errorText(e));
+            }
+        };
+        xhr.onerror = xhr.ontimeout = function () { DevLog.log('Wallpaper feed unreachable: ' + url); };
+        xhr.send();
+    }
 
     function find(key) {
         return list().find(function (w) { return w.key === key; }) || list()[0] || null;
@@ -68,6 +118,7 @@
 
     // Called when Home appears (launch or return from another app).
     function homeShown() {
+        refreshFeed();
         var p = Prefs.get().wallpaper;
         if (p.mode === 'rotate' && (p.interval === 'open' || due())) next();
     }

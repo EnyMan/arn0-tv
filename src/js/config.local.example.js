@@ -14,4 +14,7 @@ window.LAUNCHER_LOCAL = {
     // devLogUrl: null,
 
     // locale: 'fr-FR',
+
+    // Your own photos from the nas/wallpapers service.
+    // wallpaperFeed: 'http://192.168.0.10:8090/list.json',
 };

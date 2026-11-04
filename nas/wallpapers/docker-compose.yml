@@ -1,0 +1,13 @@
+# Copy this folder to the NAS (e.g. /share/Container/arn0-wallpapers-app), then over SSH:
+#   cd /share/Container/arn0-wallpapers-app && docker compose up -d --build
+# The container then shows up in QNAP Container Station. Photos live in the volume below.
+# Upload page: http://<nas-ip>:8090/   Launcher setting: wallpaperFeed in src/js/config.local.js
+services:
+  arn0-wallpapers:
+    build: .
+    container_name: arn0-wallpapers
+    ports:
+      - "8090:8090"
+    volumes:
+      - /share/Container/arn0-wallpapers:/data
+    restart: unless-stopped
