@@ -12,6 +12,7 @@
     fitPreview();
     window.addEventListener('resize', fitPreview);
 
+    translatePage();
     UI.init();
     Settings.init();
     Screensaver.init();

@@ -102,7 +102,7 @@
             '<rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/>' +
             '<rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>';
         wrap.appendChild(tile);
-        wrap.appendChild(el('div', 'label', 'All apps'));
+        wrap.appendChild(el('div', 'label', T('All apps')));
         wrap._item = { kind: 'all' };
         return wrap;
     }
@@ -211,7 +211,7 @@
         UI.resetScroll(grid);
         var items = Apps.allSorted(state.apps, state.showEverything);
         items.forEach(function (item) { grid.appendChild(appTile(item)); });
-        $('all-count').textContent = items.length + ' apps';
+        $('all-count').textContent = T('{0} apps', items.length);
     }
 
     function renderLab() {
@@ -258,18 +258,18 @@
 
     function launchApp(item) {
         runLogged('Launch ' + item.id, Apps.launch(item.id)).catch(function (err) {
-            UI.toast('Could not open ' + item.label + ': ' + DevLog.errorText(err));
+            UI.toast(T('Could not open {0}: {1}', item.label, DevLog.errorText(err)));
         });
     }
 
     function openInput(item, method) {
         method = method || item.method || cfg.inputMethod;
-        UI.toast('Switching to ' + item.label + '…');
+        UI.toast(T('Switching to {0}…', item.label));
         runLogged('Input HDMI ' + item.hdmi + ' via ' + method, Inputs.open(item.hdmi, method)).then(function (result) {
             log('Current source now: ' + Inputs.describeSource(Inputs.current()));
             if (result === 'inapp') enterTvMode();
         }).catch(function (err) {
-            UI.toast('Could not switch to ' + item.label + ': ' + DevLog.errorText(err));
+            UI.toast(T('Could not switch to {0}: {1}', item.label, DevLog.errorText(err)));
         });
     }
 
@@ -303,7 +303,7 @@
 
     function nextWallpaper() {
         var w = Wallpaper.next();
-        if (w) UI.toast(w.title + (w.credit ? ' · ' + w.credit : ''));
+        if (w) UI.toast(T(w.title) + (w.credit ? ' · ' + w.credit : ''));
     }
 
     // Colour keys are hidden shortcuts; everything is also reachable from Settings.
@@ -398,7 +398,7 @@
             writeCache(list);
             setApps(list);
         }).catch(function (err) {
-            UI.toast('Could not list apps: ' + DevLog.errorText(err));
+            UI.toast(T('Could not list apps: {0}', DevLog.errorText(err)));
             log('App list failed: ' + DevLog.errorText(err));
         });
     }

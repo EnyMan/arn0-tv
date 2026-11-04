@@ -49,6 +49,10 @@
         'fr-FR': {
             clear: 'Dégagé', cloudy: 'Nuageux', fog: 'Brouillard', drizzle: 'Bruine',
             rain: 'Pluie', showers: 'Averses', snow: 'Neige', storm: 'Orage'
+        },
+        'cs-CZ': {
+            clear: 'Jasno', cloudy: 'Oblačno', fog: 'Mlha', drizzle: 'Mrholení',
+            rain: 'Déšť', showers: 'Přeháňky', snow: 'Sníh', storm: 'Bouřka'
         }
     };
 

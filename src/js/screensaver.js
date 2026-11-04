@@ -210,7 +210,7 @@
     }
 
     function caption(w) {
-        $('ss-title').textContent = w ? w.title : '';
+        $('ss-title').textContent = w ? T(w.title) : '';
         $('ss-caption').classList.toggle('hidden', !w);
     }
 
