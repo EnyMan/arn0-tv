@@ -17,6 +17,7 @@
         '{0} apps': ['{0} aplikace', '{0} aplikace', '{0} aplikací'],
         'Open': 'Otevřít',
         'Settings': 'Nastavení',
+        'Could not open TV settings: {0}': 'Nastavení TV se nepodařilo otevřít: {0}',
         'Home': 'Domů',
         'Run': 'Spustit',
         'Select': 'Vybrat',
@@ -54,7 +55,7 @@
 
         // Background
         'Wallpaper': 'Tapeta',
-        'Change every': 'Střídat',
+        'Change every': 'Měnit každých',
         'Photo': 'Fotka',
         'Off': 'Vypnuto',
         'Rotate': 'Střídat',

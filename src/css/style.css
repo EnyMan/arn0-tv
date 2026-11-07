@@ -328,7 +328,7 @@ h1, h2 {
 .dot.on { background: #4ade80; }
 
 
-/* Gear (Settings) */
+/* Gear (Settings) and wrench (TV settings) */
 
 .gear {
     position: absolute;
@@ -340,6 +340,11 @@ h1, h2 {
     color: var(--muted);
     will-change: transform;
     transition: transform 0.1s ease-out;
+}
+
+/* Wrench (TV settings), to the left of the gear */
+#tv-settings {
+    right: calc(var(--edge) + 96px);
 }
 
 .gear svg {

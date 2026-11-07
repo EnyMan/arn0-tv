@@ -262,6 +262,27 @@
         });
     }
 
+    /*
+     * The TV's own settings menu: Tizen's "setting" app control, which Samsung answers with its
+     * settings; older TVs only have the org.tizen.menu app. The same order as free-my-tv.
+     */
+    function openTvSettings() {
+        function menuApp() {
+            runLogged('Launch org.tizen.menu', Apps.launch('org.tizen.menu')).catch(function (err) {
+                UI.toast(T('Could not open TV settings: {0}', DevLog.errorText(err)));
+            });
+        }
+        try {
+            var control = new tizen.ApplicationControl('http://tizen.org/appcontrol/operation/setting', null, null, null, []);
+            tizen.application.launchAppControl(control, null, function () { log('TV settings: ok'); }, function (err) {
+                log('TV settings app control: FAILED ' + DevLog.errorText(err));
+                menuApp();
+            });
+        } catch (e) {
+            menuApp();
+        }
+    }
+
     function openInput(item, method) {
         method = method || item.method || cfg.inputMethod;
         UI.toast(T('Switching to {0}…', item.label));
@@ -417,18 +438,20 @@
             startRow: 1,
             hints: [['OK', 'Open'], ['▲', 'Settings']],
             rows: function () {
-                return [[$('gear')], UI.children($('inputs-row')), UI.children($('apps-row'))];
+                return [[$('tv-settings'), $('gear')], UI.children($('inputs-row')), UI.children($('apps-row'))];
             },
             activate: function (item) {
                 if (item.kind === 'app') launchApp(item);
                 else if (item.kind === 'all') UI.show('all');
                 else if (item.kind === 'input') openInput(item);
                 else if (item.kind === 'settings') UI.show('settings');
+                else if (item.kind === 'tv-settings') openTvSettings();
             },
             // Home is the root: Back does nothing.
             onBack: function () { return true; }
         });
         $('gear')._item = { kind: 'settings' };
+        $('tv-settings')._item = { kind: 'tv-settings' };
 
         UI.register('all', {
             el: $('all'),
